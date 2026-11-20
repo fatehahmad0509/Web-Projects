@@ -1,126 +1,122 @@
 # JustLearnIt
 
-Öğrencilerin soru çözerek XP ve altın kazandığı, öğretmenlerin ödev takibi yaptığı, okul yönetiminin platform genelini yönettiği bir LMS (Öğrenim Yönetim Sistemi) web uygulaması. FastAPI backend + vanilla HTML/JS frontend.
+An LMS (Learning Management System) web application where students earn XP and gold by solving questions, teachers track assignments, and school administrators manage the entire platform. FastAPI backend + vanilla HTML/JS frontend.
 
----
+## Features
 
-## Özellikler
+**Student**
 
-### Öğrenci
-- Konu bazlı soru çözme (pratik maçlar)
-- Puan ve altın kazanma
-- Günlük seri (streak) sistemi
-- Rozet ve başarım sistemi
-- Market: kazanılan altınla puan boost'u, streak koruması, kozmetik rozetler ve loot chest satın alma
-- Ödev takibi ve bildirimler
-- Konuya göre başarı istatistikleri
+* Topic-based question solving (practice matches)
+* Earning XP and gold
+* Daily streak system
+* Badge and achievement system
+* Store: purchase score boosts, streak freezes, cosmetic badges, and loot chests with earned gold
+* Assignment tracking and notifications
+* Success statistics by topic
 
-### Öğretmen
-- Sınıf bazlı öğrenci listesi ve istatistikleri
-- Ödev atama ve güncelleme
-- Ders ve konu görüntüleme
-- Okul kapsamında filtrelenmiş analitik raporlar
+**Teacher**
 
-### Admin
-- Okul, kullanıcı, öğrenci, öğretmen CRUD
-- Ders, konu, soru yönetimi
-- Platform geneli istatistikler
-- Denetim logu (tüm anlamlı kullanıcı aksiyonları `system_logs` tablosuna yazılır)
+* Class-based student list and statistics
+* Assigning and updating homework
+* Viewing courses and topics
+* School-wide filtered analytics reports
 
----
+**Admin**
 
-## Teknoloji
+* School, user, student, and teacher CRUD
+* Course, topic, and question management
+* Platform-wide statistics
+* Audit log (all meaningful user actions are recorded in the `system_logs` table)
 
-- **Backend:** Python 3.10+ · FastAPI 0.109 · Uvicorn
-- **Veritabanı:** PostgreSQL (psycopg2)
-- **Kimlik Doğrulama:** JWT (python-jose) · SHA-256 şifre hash
-- **Frontend:** Vanilla HTML/CSS/JS (tek dosya: `frontend/index.html`)
+## Tech Stack
 
----
+* **Backend:** Python 3.10+ · FastAPI 0.109 · Uvicorn
+* **Database:** PostgreSQL (`psycopg2`)
+* **Authentication:** JWT (`python-jose`) · SHA-256 password hashing
+* **Frontend:** Vanilla HTML/CSS/JS (single file: `frontend/index.html`)
 
-## Kurulum
+## Installation
 
-### 1. Repoyu klonla
+1. **Clone the repository**
 
 ```bash
-git clone https://github.com/kullaniciadiniz/JustLearnIt.git
+git clone https://github.com/yourusername/JustLearnIt.git
 cd JustLearnIt
+
 ```
 
-### 2. Sanal ortam oluştur ve bağımlılıkları yükle
+2. **Create a virtual environment and install dependencies**
 
 ```bash
 python -m venv venv
 source venv/bin/activate       # Windows: venv\Scripts\activate
 pip install -r requirements.txt
+
 ```
 
-### 3. `.env` dosyasını oluştur
+3. **Create the `.env` file**
 
 ```env
-DB_URL=postgresql://kullanici:sifre@localhost:5432/justlearnit
-JWT_SECRET=production-icin-degistir
-PASSWORD_SALT=bu-salti-de-degistir
+DB_URL=postgresql://user:password@localhost:5432/justlearnit
+JWT_SECRET=change-for-production
+PASSWORD_SALT=change-this-salt-too
+
 ```
 
-### 4. Uygulamayı başlat
+4. **Start the application**
 
 ```bash
 uvicorn main:app --reload
-```
-
-Uygulama ilk başlatmada tüm tabloları ve başlangıç verilerini (dersler, market öğeleri, admin kullanıcısı) otomatik olarak oluşturur.
-
-Frontend için ayrı bir sunucuya gerek yok. `http://localhost:8000` adresini aç — backend, `frontend/index.html`'i doğrudan sunmaktadır.
-
----
-
-## Proje Yapısı
 
 ```
+
+On first launch, the application automatically creates all tables and initial seed data (courses, store items, admin user).
+
+No separate server is required for the frontend. Open `http://localhost:8000` — the backend serves `frontend/index.html` directly.
+
+## Project Structure
+
+```text
 JustLearnIt/
-├── main.py               # Uygulama giriş noktası
+├── main.py               # Application entry point
 ├── requirements.txt
 ├── core/
-│   ├── db.py             # PostgreSQL bağlantısı, tablo oluşturma, seed
-│   ├── security.py       # JWT, şifre hash, rol tabanlı dependency'ler
-│   ├── achievements.py   # Rozet verme, puan kontrolü, istatistik güncelleme
-│   └── logs.py           # Denetim logu (log_action)
+│   ├── db.py             # PostgreSQL connection, table creation, seed
+│   ├── security.py       # JWT, password hashing, role-based dependencies
+│   ├── achievements.py   # Badge awarding, score checking, statistics updates
+│   └── logs.py           # Audit log (log_action)
 ├── modules/
-│   ├── auth.py           # Giriş ve JWT üretimi
-│   ├── students.py       # Öğrenci profili, rozetler, ödevler, bildirimler
-│   ├── teacher.py        # Öğretmen paneli ve ödev yönetimi
-│   ├── questions.py      # Ders, konu ve soru listeleme
-│   ├── match.py          # Pratik maç başlatma ve cevap gönderme
-│   ├── market.py         # Market öğeleri ve satın alma
-│   ├── analytics.py      # Sınıf ve okul bazlı istatistikler
-│   └── admin.py          # Admin CRUD ve raporlama
+│   ├── auth.py           # Login and JWT generation
+│   ├── students.py       # Student profile, badges, assignments, notifications
+│   ├── teacher.py        # Teacher dashboard and assignment management
+│   ├── questions.py      # Course, topic, and question listing
+│   ├── match.py          # Practice match start and answer submission
+│   ├── market.py         # Store items and purchasing
+│   ├── analytics.py      # Class and school-based statistics
+│   └── admin.py          # Admin CRUD and reporting
 └── frontend/
-    └── index.html        # Tek sayfalık frontend
-```
+    └── index.html        # Single-page frontend
 
----
+```
 
 ## API
 
-Swagger arayüzü: `http://localhost:8000/docs`
+Swagger UI: `http://localhost:8000/docs`
 
-| Prefix | Kapsam |
-|---|---|
-| `POST /auth/login` | Giriş, JWT alma |
-| `GET /students/...` | Öğrenci profili, rozetler, ödevler |
-| `GET /questions/subjects` | Ders ve konu listesi |
-| `POST /match/start` | Yeni pratik maç başlat |
-| `POST /match/submit` | Cevap gönder |
-| `GET /market/items` | Market listesi |
-| `POST /market/buy` | Ürün satın al |
-| `GET /teacher/...` | Öğretmen paneli |
-| `GET /analytics/...` | Analitik raporlar |
-| `GET /admin/...` | Admin yönetimi |
-| `GET /health` | Sağlık kontrolü |
+| Prefix | Scope |
+| --- | --- |
+| `POST /auth/login` | Login, obtain JWT |
+| `GET /students/...` | Student profile, badges, assignments |
+| `GET /questions/subjects` | Course and topic list |
+| `POST /match/start` | Start a new practice match |
+| `POST /match/submit` | Submit an answer |
+| `GET /market/items` | Store item list |
+| `POST /market/buy` | Purchase an item |
+| `GET /teacher/...` | Teacher dashboard |
+| `GET /analytics/...` | Analytics reports |
+| `GET /admin/...` | Admin management |
+| `GET /health` | Health check |
 
----
-
-## Lisans
+## License
 
 MIT
